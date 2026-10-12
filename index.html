@@ -6,15 +6,20 @@
     <title>Stream Link Decoder</title>
     <style>
         /* 
-         * GLOBAL STYLES 
-         * Enforcing pre-wrap to preserve all user spaces and double spaces 
+         * 1. GLOBAL STYLES & PRE-WRAP
+         * white-space: pre-wrap ensures ALL spaces, double spaces, 
+         * and line breaks are strictly preserved exactly as typed.
          */
         * {
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            white-space: pre-wrap; /* Preserves spaces and double spaces */
+            white-space: pre-wrap; 
         }
 
+        /* 
+         * 2. BODY BACKGROUND (Milky White)
+         * A very soft, creamy/milky gradient background 
+         */
         body {
             margin: 0;
             padding: 0;
@@ -22,54 +27,47 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            /* Skeuomorphic/Glassmorphic background mesh */
-            background: radial-gradient(circle at top left, #4a90e2, #50e3c2, #000000);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            color: #e0e5ec;
-        }
-
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            color: #f0f0f0; /* Milky text color for elements inside the dark panel */
         }
 
         /* 
-         * MAIN CONTAINER
-         * Blends Glassmorphism (blur & transparency) with Neumorphism (soft shadows)
+         * 3. MAIN GLASS PANEL (Dark Glass / Black)
+         * Frosted black glass sitting on the milky background 
+         * Uses Neumorphic shadows to pop off the white background
          */
         .glass-panel {
             width: 90%;
-            max-width: 650px;
-            padding: 40px;
-            border-radius: 24px;
+            max-width: 680px;
+            padding: 45px;
+            border-radius: 28px;
             
-            /* Glassmorphism base */
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            /* Dark Glassmorphism */
+            background: rgba(15, 15, 15, 0.85);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             
-            /* Neumorphic outer shadow for depth */
+            /* Neumorphic shadow interacting with the white body */
             box-shadow: 
-                12px 12px 24px rgba(0, 0, 0, 0.4), 
-                -12px -12px 24px rgba(255, 255, 255, 0.05);
+                15px 15px 35px rgba(0, 0, 0, 0.15), 
+                -15px -15px 35px rgba(255, 255, 255, 0.8);
         }
 
         h2 {
             text-align: center;
             margin-top: 0;
-            margin-bottom: 30px;
-            font-size: 28px;
-            font-weight: 600;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            letter-spacing: 1px;
+            margin-bottom: 35px;
+            font-size: 26px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 1.5px;
+            text-shadow: 0px 2px 4px rgba(0,0,0,0.8);
         }
 
         /* 
-         * INPUT & OUTPUT FIELDS
-         * Neumorphic inset shadows to look like carved-out physical screens
+         * 4. INPUT FIELDS (Carved out screens)
+         * Deep inset shadows to look like physical, carved-out black screens
          */
         .input-group {
             margin-bottom: 25px;
@@ -80,55 +78,58 @@
 
         textarea {
             width: 100%;
-            height: 120px;
-            padding: 15px;
-            border-radius: 12px;
-            border: none;
+            height: 140px;
+            padding: 18px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
             outline: none;
-            background: rgba(0, 0, 0, 0.2);
-            color: #fff;
+            background: rgba(0, 0, 0, 0.6); /* Deep black */
+            color: #ffffff;
             font-size: 14px;
+            line-height: 1.5;
             resize: vertical;
             
-            /* Inset shadow for depth (Skeuomorphic screen feel) */
-            box-shadow: inset 6px 6px 12px rgba(0, 0, 0, 0.5), 
-                        inset -6px -6px 12px rgba(255, 255, 255, 0.05);
+            /* Skeuomorphic inset depth */
+            box-shadow: 
+                inset 6px 6px 15px rgba(0, 0, 0, 0.9), 
+                inset -6px -6px 15px rgba(255, 255, 255, 0.05);
         }
 
         textarea::placeholder {
-            color: rgba(255, 255, 255, 0.4);
+            color: rgba(255, 255, 255, 0.3);
         }
 
         /* 
-         * BUTTONS
-         * Tactile Neumorphic/Skeuomorphic buttons that "press" down 
+         * 5. BUTTONS (Tactile Neumorphism)
          */
         button {
-            padding: 12px 24px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            font-size: 16px;
-            font-weight: bold;
+            padding: 14px 28px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+            color: #fdfbfb;
+            font-size: 15px;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.2s ease-in-out;
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
             
-            /* Outset shadow for unpressed state */
+            /* Raised button shadow */
             box-shadow: 
-                6px 6px 12px rgba(0, 0, 0, 0.3), 
-                -6px -6px 12px rgba(255, 255, 255, 0.05);
+                6px 6px 14px rgba(0, 0, 0, 0.6), 
+                -4px -4px 10px rgba(255, 255, 255, 0.05);
         }
 
         button:hover {
-            background: rgba(255, 255, 255, 0.15);
+            background: linear-gradient(145deg, #333, #222);
+            color: #ffffff;
         }
 
         button:active {
-            /* Inset shadow for pressed state (tactile feedback) */
+            /* Pressed physical button state */
+            background: #151515;
             box-shadow: 
-                inset 4px 4px 8px rgba(0, 0, 0, 0.4), 
-                inset -4px -4px 8px rgba(255, 255, 255, 0.05);
+                inset 5px 5px 10px rgba(0, 0, 0, 0.8), 
+                inset -5px -5px 10px rgba(255, 255, 255, 0.03);
             transform: translateY(2px);
         }
 
@@ -138,29 +139,31 @@
         }
 
         /* 
-         * OUTPUT SECTION 
-         * Hidden by default, slides in when active 
+         * 6. OUTPUT & ERROR SECTIONS 
          */
         #output-section {
             display: none;
-            margin-top: 30px;
+            margin-top: 35px;
             padding-top: 25px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-            animation: fadeIn 0.4s ease-out forwards;
+            animation: slideIn 0.3s ease-out forwards;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-15px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Error state styling */
         .error-text {
-            color: #ff6b6b;
+            color: #ff4757;
             text-align: center;
-            font-weight: bold;
+            font-weight: 700;
             font-size: 18px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            letter-spacing: 1px;
+            background: rgba(255, 71, 87, 0.1);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 71, 87, 0.3);
             margin-top: 20px;
             display: none;
         }
@@ -172,21 +175,21 @@
     <div class="glass-panel">
         <h2> URL  Decoder  &  Cleaner </h2>
 
-        <!-- Input Section -->
+        <!-- Input Area -->
         <div class="input-group">
-            <textarea id="input-url" placeholder="Paste  your  playable  website  URL  here..."></textarea>
+            <textarea id="input-url" placeholder="Paste  your  URL  or  cURL  command  here..."></textarea>
             <div class="action-row">
                 <button id="btn-paste"> Paste  &  Decode </button>
             </div>
         </div>
 
-        <!-- Error Message -->
+        <!-- Error Notification -->
         <div id="error-msg" class="error-text"> URL  Not  Supported </div>
 
-        <!-- Output Section -->
+        <!-- Output Area (Hidden until success) -->
         <div id="output-section">
             <div class="input-group">
-                <textarea id="output-url" readonly placeholder="Modified  Direct  Link  will  appear  here..."></textarea>
+                <textarea id="output-url" readonly placeholder="Cleaned  link  will  appear  here..."></textarea>
                 <div class="action-row">
                     <button id="btn-copy"> Copy  Modified  Link </button>
                 </div>
@@ -195,7 +198,7 @@
     </div>
 
     <script>
-        // DOM Elements
+        // DOM Element Selection
         const inputField = document.getElementById('input-url');
         const outputField = document.getElementById('output-url');
         const outputSection = document.getElementById('output-section');
@@ -204,109 +207,140 @@
         const copyBtn = document.getElementById('btn-copy');
 
         /**
-         * Core processing function.
-         * Takes the raw input, decodes it, and cleans the CloudFront signature.
+         * Core processing logic to handle raw URLs OR full cURL commands.
+         * Scans for multiple nested URLs and finds the correct .mpd manifest.
          */
         function processUrl(rawInput) {
             try {
-                let targetUrl = rawInput.trim();
+                let targetString = rawInput.trim();
+                let workingUrl = targetString;
 
-                // Check if it's the web player format (contains drm?url=)
-                if (targetUrl.includes('drm?url=')) {
-                    const parsedUrl = new URL(targetUrl);
-                    
-                    // Extract the primary 'url' parameter from the query string
-                    const encodedUrl = parsedUrl.searchParams.get('url');
-                    if (!encodedUrl) throw new Error("No payload found");
-                    
-                    // Decode the URL (converts %3A to :, %2F to /, etc.)
-                    targetUrl = decodeURIComponent(encodedUrl);
+                // 1. EXTRACT URL FROM CURL
+                // If the user pasted a full curl command, use regex to grab the first http/https link
+                const curlRegex = /(https?:\/\/[^\s'"]+)/;
+                const match = targetString.match(curlRegex);
+                if (match) {
+                    workingUrl = match[1]; // Overwrite with just the URL portion
                 }
 
-                // Verify it is a valid CloudFront media link
-                if (targetUrl.includes('cloudfront.net') && (targetUrl.includes('.mpd') || targetUrl.includes('.m3u8'))) {
+                // 2. PROCESS WEB PLAYER WRAPPER (drm?url=...)
+                // We check if it's the wrapped format containing URL-encoded payloads
+                if (workingUrl.includes('drm?url=')) {
+                    const parsedUrl = new URL(workingUrl);
                     
-                    // Clean the corrupted formatting at the end of the Signature and Policy
-                    // Specifically targets the double/single underscores attached before an '&' or at the very end of the string
-                    let cleanedUrl = targetUrl
-                        .replace(/__&/g, '&')  // Removes __ before next parameter
-                        .replace(/_&/g, '&')   // Removes _ before next parameter
-                        .replace(/__$/g, '')   // Removes __ at the absolute end of the URL
-                        .replace(/_$/g, '');   // Removes _ at the absolute end of the URL
+                    // CRITICAL FIX: Use .getAll() instead of .get()
+                    // The curl command contains multiple 'url=' parameters (init.mp4 AND master.mpd).
+                    // .getAll() returns an array of ALL of them so we can check both.
+                    const nestedUrls = parsedUrl.searchParams.getAll('url');
+                    
+                    if (nestedUrls.length === 0) throw new Error("No payload found");
+
+                    let manifestFound = false;
+
+                    // Loop through every nested URL we found
+                    for (let i = 0; i < nestedUrls.length; i++) {
+                        let decoded = decodeURIComponent(nestedUrls[i]);
+                        
+                        // We strictly want the one that is a master manifest (.mpd or .m3u8)
+                        if (decoded.includes('.mpd') || decoded.includes('.m3u8')) {
+                            workingUrl = decoded;
+                            manifestFound = true;
+                            break; // Stop looking once we find the manifest
+                        }
+                    }
+
+                    // Fallback: If we somehow didn't find an mpd/m3u8, just use the first decoded link
+                    if (!manifestFound) {
+                        workingUrl = decodeURIComponent(nestedUrls[0]);
+                    }
+                }
+
+                // 3. FINAL VERIFICATION & CLEANUP
+                // Ensure it is a CloudFront link and an actual streaming manifest
+                if (workingUrl.includes('cloudfront.net') && (workingUrl.includes('.mpd') || workingUrl.includes('.m3u8'))) {
+                    
+                    // Clean the CloudFront Signature corruption
+                    let cleanedUrl = workingUrl
+                        .replace(/__&/g, '&')  
+                        .replace(/_&/g, '&')   
+                        .replace(/__$/g, '')   
+                        .replace(/_$/g, '');   
 
                     return cleanedUrl;
                 } else {
-                    return null; // Triggers the "Not Supported" state
+                    return null; // Fails verification, trigger "Not Supported"
                 }
             } catch (error) {
-                console.error("Parsing error:", error);
+                console.error("Logic processing error:", error);
                 return null;
             }
         }
 
         /**
-         * UI Update handler.
-         * Toggles the visibility of the output or error states based on the result.
+         * UI Controller
+         * Decides what to show based on whether the URL was successfully processed
          */
         function handleDecode(inputStr) {
             const result = processUrl(inputStr);
 
             if (result) {
-                // Success State
+                // Success: Show the dark output panel
                 errorMsg.style.display = 'none';
                 outputField.value = result;
                 outputSection.style.display = 'block';
             } else {
-                // Failure State
+                // Fail: Hide output, show the red error box
                 outputSection.style.display = 'none';
                 errorMsg.style.display = 'block';
             }
         }
 
-        // ---------------------------------------------------------
+        // ==========================================
         // EVENT LISTENERS
-        // ---------------------------------------------------------
+        // ==========================================
 
-        // 1. Manual typing/pasting directly into the box
+        // Listener 1: Real-time typing/pasting detection
         inputField.addEventListener('input', (e) => {
             if(e.target.value.trim() !== "") {
                 handleDecode(e.target.value);
             } else {
+                // Reset UI if box is cleared
                 outputSection.style.display = 'none';
                 errorMsg.style.display = 'none';
             }
         });
 
-        // 2. Paste & Decode Button (Uses Clipboard API)
+        // Listener 2: "Paste & Decode" Button Logic
         pasteBtn.addEventListener('click', async () => {
             try {
-                // Request clipboard text
+                // Grabs text directly from the OS clipboard
                 const text = await navigator.clipboard.readText();
                 inputField.value = text;
                 handleDecode(text);
             } catch (err) {
-                alert("Clipboard  permission  denied  or  empty.  Please  paste  manually.");
+                alert(" Clipboard  permission  denied  or  clipboard  is  empty.  Please  paste  manually. ");
             }
         });
 
-        // 3. Copy Output Button
+        // Listener 3: "Copy Modified Link" Button Logic
         copyBtn.addEventListener('click', async () => {
             if (outputField.value) {
                 try {
                     await navigator.clipboard.writeText(outputField.value);
                     
-                    // Provide temporary tactile feedback on the button text
+                    // Tactile text change feedback
                     const originalText = copyBtn.innerText;
                     copyBtn.innerText = " Copied  Successfully! ";
+                    
+                    // Revert text after 2 seconds
                     setTimeout(() => {
                         copyBtn.innerText = originalText;
                     }, 2000);
                 } catch (err) {
-                    alert("Failed  to  copy.  Please  copy  manually.");
+                    alert(" Failed  to  copy.  Please  copy  manually. ");
                 }
             }
         });
     </script>
 </body>
 </html>
-  
