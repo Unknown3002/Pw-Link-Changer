@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream Link Decoder</title>
+    <style>
+        /* 
+         * GLOBAL STYLES 
+         * Enforcing pre-wrap to preserve all user spaces and double spaces 
+         */
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            white-space: pre-wrap; /* Preserves spaces and double spaces */
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Skeuomorphic/Glassmorphic background mesh */
+            background: radial-gradient(circle at top left, #4a90e2, #50e3c2, #000000);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #e0e5ec;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 
+         * MAIN CONTAINER
+         * Blends Glassmorphism (blur & transparency) with Neumorphism (soft shadows)
+         */
+        .glass-panel {
+            width: 90%;
+            max-width: 650px;
+            padding: 40px;
+            border-radius: 24px;
+            
+            /* Glassmorphism base */
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            
+            /* Neumorphic outer shadow for depth */
+            box-shadow: 
+                12px 12px 24px rgba(0, 0, 0, 0.4), 
+                -12px -12px 24px rgba(255, 255, 255, 0.05);
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: 600;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: 1px;
+        }
+
+        /* 
+         * INPUT & OUTPUT FIELDS
+         * Neumorphic inset shadows to look like carved-out physical screens
+         */
+        .input-group {
+            margin-bottom: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 15px;
+            border-radius: 12px;
+            border: none;
+            outline: none;
+            background: rgba(0, 0, 0, 0.2);
+            color: #fff;
+            font-size: 14px;
+            resize: vertical;
+            
+            /* Inset shadow for depth (Skeuomorphic screen feel) */
+            box-shadow: inset 6px 6px 12px rgba(0, 0, 0, 0.5), 
+                        inset -6px -6px 12px rgba(255, 255, 255, 0.05);
+        }
+
+        textarea::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* 
+         * BUTTONS
+         * Tactile Neumorphic/Skeuomorphic buttons that "press" down 
+         */
+        button {
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            
+            /* Outset shadow for unpressed state */
+            box-shadow: 
+                6px 6px 12px rgba(0, 0, 0, 0.3), 
+                -6px -6px 12px rgba(255, 255, 255, 0.05);
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        button:active {
+            /* Inset shadow for pressed state (tactile feedback) */
+            box-shadow: 
+                inset 4px 4px 8px rgba(0, 0, 0, 0.4), 
+                inset -4px -4px 8px rgba(255, 255, 255, 0.05);
+            transform: translateY(2px);
+        }
+
+        .action-row {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        /* 
+         * OUTPUT SECTION 
+         * Hidden by default, slides in when active 
+         */
+        #output-section {
+            display: none;
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Error state styling */
+        .error-text {
+            color: #ff6b6b;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            margin-top: 20px;
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="glass-panel">
+        <h2> URL  Decoder  &  Cleaner </h2>
+
+        <!-- Input Section -->
+        <div class="input-group">
+            <textarea id="input-url" placeholder="Paste  your  playable  website  URL  here..."></textarea>
+            <div class="action-row">
+                <button id="btn-paste"> Paste  &  Decode </button>
+            </div>
+        </div>
+
+        <!-- Error Message -->
+        <div id="error-msg" class="error-text"> URL  Not  Supported </div>
+
+        <!-- Output Section -->
+        <div id="output-section">
+            <div class="input-group">
+                <textarea id="output-url" readonly placeholder="Modified  Direct  Link  will  appear  here..."></textarea>
+                <div class="action-row">
+                    <button id="btn-copy"> Copy  Modified  Link </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const inputField = document.getElementById('input-url');
+        const outputField = document.getElementById('output-url');
+        const outputSection = document.getElementById('output-section');
+        const errorMsg = document.getElementById('error-msg');
+        const pasteBtn = document.getElementById('btn-paste');
+        const copyBtn = document.getElementById('btn-copy');
+
+        /**
+         * Core processing function.
+         * Takes the raw input, decodes it, and cleans the CloudFront signature.
+         */
+        function processUrl(rawInput) {
+            try {
+                let targetUrl = rawInput.trim();
+
+                // Check if it's the web player format (contains drm?url=)
+                if (targetUrl.includes('drm?url=')) {
+                    const parsedUrl = new URL(targetUrl);
+                    
+                    // Extract the primary 'url' parameter from the query string
+                    const encodedUrl = parsedUrl.searchParams.get('url');
+                    if (!encodedUrl) throw new Error("No payload found");
+                    
+                    // Decode the URL (converts %3A to :, %2F to /, etc.)
+                    targetUrl = decodeURIComponent(encodedUrl);
+                }
+
+                // Verify it is a valid CloudFront media link
+                if (targetUrl.includes('cloudfront.net') && (targetUrl.includes('.mpd') || targetUrl.includes('.m3u8'))) {
+                    
+                    // Clean the corrupted formatting at the end of the Signature and Policy
+                    // Specifically targets the double/single underscores attached before an '&' or at the very end of the string
+                    let cleanedUrl = targetUrl
+                        .replace(/__&/g, '&')  // Removes __ before next parameter
+                        .replace(/_&/g, '&')   // Removes _ before next parameter
+                        .replace(/__$/g, '')   // Removes __ at the absolute end of the URL
+                        .replace(/_$/g, '');   // Removes _ at the absolute end of the URL
+
+                    return cleanedUrl;
+                } else {
+                    return null; // Triggers the "Not Supported" state
+                }
+            } catch (error) {
+                console.error("Parsing error:", error);
+                return null;
+            }
+        }
+
+        /**
+         * UI Update handler.
+         * Toggles the visibility of the output or error states based on the result.
+         */
+        function handleDecode(inputStr) {
+            const result = processUrl(inputStr);
+
+            if (result) {
+                // Success State
+                errorMsg.style.display = 'none';
+                outputField.value = result;
+                outputSection.style.display = 'block';
+            } else {
+                // Failure State
+                outputSection.style.display = 'none';
+                errorMsg.style.display = 'block';
+            }
+        }
+
+        // ---------------------------------------------------------
+        // EVENT LISTENERS
+        // ---------------------------------------------------------
+
+        // 1. Manual typing/pasting directly into the box
+        inputField.addEventListener('input', (e) => {
+            if(e.target.value.trim() !== "") {
+                handleDecode(e.target.value);
+            } else {
+                outputSection.style.display = 'none';
+                errorMsg.style.display = 'none';
+            }
+        });
+
+        // 2. Paste & Decode Button (Uses Clipboard API)
+        pasteBtn.addEventListener('click', async () => {
+            try {
+                // Request clipboard text
+                const text = await navigator.clipboard.readText();
+                inputField.value = text;
+                handleDecode(text);
+            } catch (err) {
+                alert("Clipboard  permission  denied  or  empty.  Please  paste  manually.");
+            }
+        });
+
+        // 3. Copy Output Button
+        copyBtn.addEventListener('click', async () => {
+            if (outputField.value) {
+                try {
+                    await navigator.clipboard.writeText(outputField.value);
+                    
+                    // Provide temporary tactile feedback on the button text
+                    const originalText = copyBtn.innerText;
+                    copyBtn.innerText = " Copied  Successfully! ";
+                    setTimeout(() => {
+                        copyBtn.innerText = originalText;
+                    }, 2000);
+                } catch (err) {
+                    alert("Failed  to  copy.  Please  copy  manually.");
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+  
